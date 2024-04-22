@@ -1,87 +1,100 @@
-import {  
-        createProjectsArray ,  
-    } from "./todo-logic";
-
-import {
-    createDomStructure , 
-    updateDateGroupDOM,
-    updateCustomProjectsDOM ,
-    loadTasks
-} from "./dom-logic"
-
-import { startOfToday } from "date-fns/startOfToday"
-import { endOfToday } from "date-fns/endOfToday"
-import { addDays } from "date-fns/addDays";
-
-import './style.css'
-
-const allProjectsArray = createProjectsArray()
 
 
-function initializeApp() {
+const dropDownMenu = (title, parent, displayMode) => {
     
-    allProjectsArray.createDateGrouping('All my projects', new Date(1, 0, 1), new Date (10000, 0, 1))
-    allProjectsArray.createDateGrouping('Today', startOfToday(), endOfToday())
-    allProjectsArray.createDateGrouping('Next 30 days', startOfToday(), addDays(new Date(), 30))
-    addStoredDataToAllProjectsArray()
-    allProjectsArray.updateDateGroups()
-    allProjectsArray.selectProject(allProjectsArray.dateGroups[0])
-    createDomStructure()
-    
-    updateDateGroupDOM(allProjectsArray.dateGroups)
-    updateCustomProjectsDOM(allProjectsArray)
-    loadTasks(allProjectsArray.selectedProject)
-}
+    const dropDownMenu = document.createElement('div')
+    dropDownMenu.classList.add('dropdown-menu')
+    parent.appendChild(dropDownMenu)
 
+    const menuHeader = document.createElement('button')
+    menuHeader.classList.add('dropdown-header')
+    menuHeader.textContent = title
+    dropDownMenu.appendChild(menuHeader)
 
-function removeTask(task) {
-    deleteTask(task, allProjectsArray.getProjects())
-    loadTasks(selectedProject)
-}
+    const elementsContainer = document.createElement('ul')
+    dropDownMenu.appendChild(elementsContainer)
 
-function storeData() {
-    localStorage.setItem('allProjects', JSON.stringify(allProjectsArray.getProjects()))
-}
+    const elements = elementsContainer.childNodes
 
-function retrieveData() {
-   return JSON.parse(localStorage.getItem('allProjects'))
-}
-
-function addStoredDataToAllProjectsArray() {
-    const data = retrieveData()
-    if (data) {
-        for (let i = 0 ; i < data.length ; i++) {
-            allProjectsArray.createProject(data[i].title, data[i].description)
-            const tasks = data[i].tasks
-            for (let j = 0 ; j < tasks.length ; j++) {
-                allProjectsArray.getProjects()[i].addNewTask([tasks[j].title.content, tasks[j].description.content , tasks[j].priority.value, new Date(tasks[j].dueDate.date)])
-            }
-        }
+    switch (displayMode) {
+        case 'click':
+            menuHeader.addEventListener('click', (e) => {
+                for ( let i = 0 ; i < elements.length ; i++) {
+                    toggleVisible(elements[i])
+                    console.log(e.target)
+                }
+            elementsContainer.addEventListener('click', (e) => {
+                e.stopPropagation()
+            })
+            });
+            break;
+        case 'hover':
+            dropDownMenu.addEventListener('mouseover', () => {
+                for ( let i = 0 ; i < elements.length ; i++) {
+                    addVisible(elements[i])
+                }
+            })
+            dropDownMenu.addEventListener('mouseout', () => {
+                for ( let i = 0 ; i < elements.length ; i++) {
+                    removeVisible(elements[i])
+                }
+            })
+            break;
+        default:
+            dropDownMenu.addEventListener('mouseover', () => {
+                for ( let i = 0 ; i < elements.length ; i++) {
+                    addVisible(elements[i])
+                }
+            })
+            dropDownMenu.addEventListener('mouseout', () => {
+                for ( let i = 0 ; i < elements.length ; i++) {
+                    removeVisible(elements[i])
+                }
+            })
+            break;
     }
-    else {
-    loadDefaultProject()
-}
-}
-
-function loadDefaultProject() {
-    const defaultProj = allProjectsArray.createProject('My first Project')
-    defaultProj.addNewTask(['My first to do', 'Here you can write something about this to do.', '1', new Date()])
-}
-
-
-
-export { 
-    allProjectsArray ,
-    removeTask ,
-    storeData
+  
+    function addVisible(el) {
+        el.classList.add('visible')
+    }
+    
+    function removeVisible(el) {
+        el.classList.remove('visible')
     }
 
+    function toggleVisible(el) {
+        el.classList.toggle('visible')
+    }
 
+    function newElement(text, callbackFunction) {
+        const el = document.createElement('li')
+        el.textContent = text
+        el.addEventListener('click', callbackFunction)
+        elementsContainer.appendChild(el)
+    }
 
+    function removeElement(element) {
+        elementsContainer.removeChild(element)
+    }
 
+    return {
+        newElement,
+        removeElement
+    }
 
-initializeApp()
+}
 
+import './style.css';
 
+const menuClickContainer = document.querySelector('#menu-click')
+const menuClick = dropDownMenu('Click Menu', menuClickContainer, 'click')
+menuClick.newElement('Element 1')
+menuClick.newElement('Element 2')
+menuClick.newElement('Element 3')
 
+const menuHoverContainer = document.querySelector('#menu-hover')
+const menuHover = dropDownMenu('Hover Menu', menuHoverContainer, 'hover')
+menuHover.newElement('Element 1')
+menuHover.newElement('Element 2')
+menuHover.newElement('Element 3')
 

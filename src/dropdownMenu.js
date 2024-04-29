@@ -86,7 +86,6 @@ const dropDownMenuFromHtml = (menuElement, displayMode) => {
     dropDownMenu.classList.add('dropdown-menu')
 
     const menuHeader = dropDownMenu.children[0]
-    console.log(menuHeader)
     menuHeader.classList.add('dropdown-header')
 
     const elementsContainer = dropDownMenu.children[1]

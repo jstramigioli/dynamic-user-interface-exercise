@@ -71,23 +71,33 @@ button {
 	border-style: none;
 	padding: 0;
 	font-size: inherit;
+	cursor: pointer;
 }
+
+/* Dropdown Menus*/
 
 #dropdown-menu-examples {
 	display: flex;
 	justify-content: center;
 	color: white;
 	font-size: large;
+	
 }
 
 .dropdown-menu {
 	width: 220px;
 	margin: 30px;
+	position: relative;
 }
 
 .dropdown-header {
     background-color: rgb(100, 89, 89);
 	height: 70px;
+}
+
+.dropdown-menu ul {
+	position: absolute;
+	width: 100%;
 }
 
 .dropdown-header:hover {
@@ -104,10 +114,112 @@ button {
 .dropdown-menu li:hover {
 	background-color: rgb(184, 153, 153);
 	
+	
 }
 
 .dropdown-menu .visible {
     display: flex;
 	align-items: center;
 	justify-content: center;
+	position: relative;
+	z-index: 100;
+}
+
+/* Image slider */
+
+
+.img-slider-container {
+	width: 100%;
+	height: 600px;
+	display: flex;
+	justify-content: center;
+}
+
+.img-frame {
+	display: flex;
+	width: 800px;
+	height: 600px;
+	position: relative;
+	
+}
+
+.all-img {
+	width: 800px;
+    overflow: hidden;
+	position: relative;
+	
+}
+
+.all-img img {
+	position: absolute;
+	transition: transform 1s ease-in-out, opacity 1s ease-in-out;
+	top: 50%;
+	opacity: 0;
+	border-radius: 20px;
+}
+
+.all-img img.left {
+	transform: translate(-100%, -50%);
+}
+
+.all-img img.right {
+	transform: translate(100%, -50%);
+}
+
+.all-img img.selected {
+	display: block;
+	transform: translate(0, -50%);
+	opacity: 100%;
+}
+
+/* .all-img img.last, .all-img img.first {
+	transition: opacity 1s ease-in-out;
+} */
+
+.all-img img.last:not(.selected),
+.all-img img.first:not(.selected) {
+	opacity: 0;
+}
+
+.img-slider-container .prev-btn,
+.img-slider-container .next-btn {
+	background-color: white;
+	position: absolute;
+	height: 20px;
+	width: 20px;
+}
+
+.img-slider-container button.next-btn {
+	top: 50%;
+	right: 4%;
+}
+
+.img-slider-container button.prev-btn {
+	top: 50%;
+	left: 4%;
+}
+
+.circles-container {
+	position: absolute;
+	display: flex;
+	overflow: visible;
+	gap: 4px;
+	top: 95%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+}
+
+.circle-slider {
+	height: 12px;
+	width: 12px;
+	border-radius: 12px;
+	display: block;
+	position: relative;
+	background-color: transparent;
+	border-style: solid;
+	border-color: white;
+}
+
+.circle-slider.selected {
+	background-color: white;
 }
